@@ -1,0 +1,9 @@
+#. module: company_connector_loewie
+#: model:ir.ui.menu,name:company_connector_loewie.menu_connector_wizard
+msgid "Copy Purhcase Orders"
+msgstr " 复制采购订单"
+
+#. module: company_connector_loewie
+#: model:ir.ui.menu,name:company_connector_loewie.menu_connector_wizard2
+msgid "Copy Purhcase Orders"
+msgstr " 复制销售订单"

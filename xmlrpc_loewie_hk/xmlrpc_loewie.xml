@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		
+		<record id="view_picking_add_dest" model="ir.ui.view">
+            <field name="name">stock.picking.add_dest</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">		
+	
+                <xpath expr="//form/header/button[@name='action_assign']" position='before'> 
+                    <button name="generate_sz_erp_picking" string="Generate Remote Pick" type="object" groups="purchase.group_purchase_user"/>		
+					<button name="view_sz_erp_picking" string="View Remote Pick" type="object" groups="purchase.group_purchase_user"/>
+				</xpath>	
+		
+                <field name="backorder_id" position="after">
+				    <field name="picking_no"/>
+				</field>				
+           </field>
+        </record>
+		
+		
+		<record id="view_order_form_remote_purchase_btn" model="ir.ui.view">
+            <field name="name">sale.order.remote_purchase_btn</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">			
+				<xpath expr="//header/button[@name='invoice_cancel']" position="after">       
+					<field name="remote_purchase_id" invisible="1"/>		
+					<field name="create_uid" invisible="1"/>						
+					<button name="generate_remote_erp_purchase" string="生成深圳ERP采购单" type="object" groups="base.group_user" attrs="{'invisible': [('create_uid','not in',(1,22,29,40))]}"/>
+					<button name="view_remote_erp_purchase" string="查看深圳公司采购单" type="object" groups="base.group_user" attrs="{'invisible': [('remote_purchase_id','=',0),('create_uid','not in',(1,22,29,40))]}"/>					
+				</xpath>	
+				<xpath expr="//sheet/group/group/field[@name='partner_shipping_id']" position="after">               
+					<field name="remote_purchase_no"/>
+				</xpath>				
+				
+			</field>
+		</record>					
+		
+		<record id="view_purchase_form_remote_sale_btn" model="ir.ui.view">
+            <field name="name">purchase.order.remote_sale_btn</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">			
+				<xpath expr="//header/button[@name='bid_received']" position="after"> 
+					<field name="remote_sale_id" invisible="1"/>	
+					<field name="create_uid" invisible="1"/>					
+					<button name="generate_remote_erp_sale" string="生成香港ERP销售单" type="object" groups="base.group_user" attrs="{'invisible': [('create_uid','not in',(1,22,29))]}"/>
+					<button name="view_remote_erp_sale" string="查看香港公司销售单" type="object" groups="base.group_user" attrs="{'invisible': [('remote_sale_id','=',0),('create_uid','not in',(1,22,29))]}"/>						
+				</xpath>
+				<xpath expr="//sheet/group/group/field[@name='pricelist_id']" position="after">               
+					<field name="remote_picking_id" invisible="1"/>				
+					<field name="remote_sale_no"/>
+					<field name="picking_no"/>
+				</xpath>
+			</field>
+		</record>	
+				
+		
+	</data>
+</openerp>

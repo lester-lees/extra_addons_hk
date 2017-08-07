@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>		
+		<record id="view_saleorder_add_undelivery" model="ir.ui.view">
+            <field name="name">saleorder add undelivery</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">		
+				<xpath expr="//tree/field[@name='state']" position="before">               
+					<field name="undelivered"/>
+				</xpath>
+           </field>
+        </record>
+
+		<record id="view_purchaseorder_add_undelivery" model="ir.ui.view">
+            <field name="name">purchaseorder add undelivery</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">		
+				<xpath expr="//tree/field[@name='state']" position="before">               
+					<field name="undelivered"/>
+				</xpath>
+           </field>
+        </record>
+
+		<record id="view_purchaseorder_set_done" model="ir.ui.view">
+            <field name="name">purchaseorder set_done</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">		
+				<button name='bid_received' position="before">               
+					<button name="set_purchase_order_done" type='object' groups="base.group_erp_manager" states="approved,except_invoice,except_picking" string="Set Order Done"/>
+				</button>
+           </field>
+        </record>		
+		
+        <record id="view_stock_security_tree" model="ir.ui.view">
+            <field name="name">stock security tree</field>
+            <field name="model">stock.security</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="stock security">
+                    <field name="id"/> 
+                    <field name="product_id"/>
+                    <field name="supplier_id"/>				
+                    <field name="minimal_qty"/>
+                    <field name="maximal_qty"/>					
+                    <field name="create_uid"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_stock_security_form" model="ir.ui.view">
+            <field name="name">stock security form</field>
+            <field name="model">stock.security</field>
+            <field name="arch" type="xml">
+                <form string="stock security">
+					<div>
+						<group>
+							<field name="id"/> 
+							<field name="product_id"/>
+							<field name="create_uid"/>
+							<field name="supplier_id"/>	
+						</group>
+						<group>
+							<field name="minimal_qty"/>
+							<field name="maximal_qty"/>
+						</group>
+					</div>
+                </form>
+            </field>
+        </record>		
+		
+        <record id="action_open_stock_security" model="ir.actions.act_window">
+            <field name="name">Stock Security Level</field>
+            <field name="res_model">stock.security</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to view Stock Security Level.
+              </p><p>
+                view Stock Security Level.
+              </p>
+            </field>
+        </record>		
+		
+        <menuitem action="action_open_stock_security" id="menu_view_stock_security" sequence="4" parent="purchase.menu_procurement_management_product"/>	
+		
+		
+        <record id="view_product_brand_tree" model="ir.ui.view">
+            <field name="name">Product Brand Tree</field>
+            <field name="model">product.brand</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="stock security">
+                    <field name="id"/> 
+                    <field name="name"/>			
+                    <field name="create_uid"/>
+                </tree>
+            </field>
+        </record>		
+        <record id="action_open_product_brand" model="ir.actions.act_window">
+            <field name="name">Product Brand</field>
+            <field name="res_model">product.brand</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="view_id" eval="view_product_brand_tree"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to view Stock Security Level.
+              </p><p>
+                view Stock Security Level.
+              </p>
+            </field>
+        </record>		
+        <menuitem action="action_open_product_brand" id="menu_view_product_brand" sequence="5" parent="purchase.menu_procurement_management_product"/>	
+		
+        <record id="view_generate_purchase_order_form" model="ir.ui.view">
+            <field name="name">Generate purchase order</field>
+            <field name="model">generate.purchaseorder</field>
+            <field name="arch" type="xml">
+                <form string="Generate purchase order" version="7">
+					<group>
+						<field name="picking_type_id"/>					
+						<field name="pricelist_id"/>					
+						<field name="currency_id"/>
+						<field name="dest_address_id"/>						
+						<field name="company_id"/>
+						<field name="partner_id"/>										
+					</group>
+                    <footer>
+                        <button name="generate_purchase_order" string="Generate Purchase Order" type="object" class="oe_highlight"/>
+                        or	
+                        <button string="_Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>		
+		
+        <act_window name="Generate Purchase Order"
+            id="action_generate_purchase_order"
+            src_model="stock.security"
+            res_model="generate.purchaseorder"
+            view_type="form" 
+            view_mode="form"
+            key2="client_action_multi" target="new" view_id="view_generate_purchase_order_form" />	
+
+
+
+        <record id="view_generate_salesorder_form" model="ir.ui.view">
+            <field name="name">Generate sales order</field>
+            <field name="model">generate.salesorder</field>
+            <field name="arch" type="xml">
+                <form string="Generate sales order" version="7">
+					<group>				
+						<field name="pricelist_id"/>										
+						<field name="company_id"/>
+						<field name="partner_id"/>										
+						<field name="partner_invoice_id"/>
+						<field name="partner_shipping_id"/>						
+						<field name="warehouse_id"/>							
+					</group>
+                    <footer>
+                        <button name="generate_salesorder" string="Generate sales Order" type="object" class="oe_highlight"/>
+                        or
+                        <button string="_Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>		
+		
+        <act_window name="Generate Sales Order"
+            id="action_generate_salesorder_order"
+            src_model="product.product"
+            res_model="generate.salesorder"
+            view_type="form" 
+            view_mode="form"
+            key2="client_action_multi" target="new" view_id="view_generate_salesorder_form" />			
+		
+	</data>
+</openerp>

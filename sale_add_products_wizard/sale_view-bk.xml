@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="order_line" position="before">
+                    <button name="%(action_sale_add_multiple)d" type="action" string="Add multiple" attrs="{'invisible':[('state','not in',['draft','sent'])]}"/>
+                </field>
+            </field>
+        </record>
+		
+        <record id="view_stock_picking_form_multipe" model="ir.ui.view">
+            <field name="name">stock.picking.form.add_multipe</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="move_lines" position="before">
+                    <button name="%(action_stock_add_multiple)d" type="action" string="Add multiple" attrs="{'invisible':[('state','not in',['draft'])]}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_purchase_order_form_multipe" model="ir.ui.view">
+            <field name="name">purchase.order.form.add_multipet</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <field name="order_line" position="before">
+                    <button name="%(purchase_order_add_multiple_view)d" type="action" string="Add multiple" attrs="{'invisible':[('state','not in',['draft'])]}"/>
+                </field>
+            </field>
+        </record>		
+		
+    </data>
+</openerp>

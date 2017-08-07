@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_sales_bymonth_filter" model="ir.ui.view">
+            <field name="name">sale.order.bymonth.filter</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="confirm_month"/>
+                </xpath> 
+            </field>
+        </record>      
+        <record id="view_order_enterprise_tree" model="ir.ui.view">
+            <field name="name">sale.enterprise.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="confirm_month"/>
+                </xpath> 
+            </field>
+        </record>
+		
+         <record id="view_picking_search_bymonth_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.search.bymonth.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="confirm_month"/>
+                </xpath>
+            </field>
+        </record>		
+         <record id="view_vpicktree_bymonth_inherit" model="ir.ui.view">
+            <field name="name">stock.vpicktree.bymonth.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="confirm_month"/>
+                </xpath>
+            </field>
+        </record> 
+
+         <record id="view_purchase_search_bymonth_inherit" model="ir.ui.view">
+            <field name="name">purchase.order.search.bymonth.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.view_request_for_quotation_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="confirm_month"/>
+                </xpath>
+            </field>
+        </record>		
+         <record id="view_purchase_tree_bymonth_inherit" model="ir.ui.view">
+            <field name="name">purchase.tree.bymonth.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="confirm_month"/>
+                </xpath>
+            </field>
+        </record> 		
+		
+
+         <record id="view_invoice_search_bymonth_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.search.bymonth.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='number']" position="after">
+                    <field name="confirm_month"/>
+                </xpath>
+            </field>
+        </record>		
+         <record id="view_invoice_tree_bymonth_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.bymonth.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='number']" position="after">
+                    <field name="confirm_month"/>
+                </xpath>
+            </field>
+        </record> 			
+    </data>
+</openerp>
+

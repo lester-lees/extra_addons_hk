@@ -1,0 +1,156 @@
+<openerp>
+    <data>
+
+        <!-- LY update price list-->
+        <record id="view_product_pricelist_view" model="ir.ui.view">
+            <field name="name">product.pricelist.form.purchasecurrency</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view" />
+            <field name="arch" type="xml">
+                <field name="currency_id" position='after'>
+                    <field name="use_purchase_currency"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- product.product -->
+        <record id="view_product_form_inherit1" model="ir.ui.view">
+            <field name="name">product.product.inherit1</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                    <xpath expr="//field[@name='lst_price']" position="after">
+                                     <field name="product_type"/>
+                                     <field name="product_origin"/>
+                                     <field name="product_class"/>
+                                     <field name="product_material"/>
+                                     <field name="product_format"/>
+                                     <field name="taiwan_invoice"/>
+                    </xpath>        
+
+                    <xpath expr="//field[@name='description']" position='before'>
+                        <group>
+                                <field name="purchase_currency_id" />
+                        </group>
+                    </xpath>
+                    <xpath expr="//field[@name='standard_price']" position='after'>
+						<field name="price_hk_sz_exchange" groups="purchase.group_purchase_user"/>
+                    </xpath>					
+            </field>
+        </record>
+
+        <!-- Inherit res.partner.bank from-->
+        <record id="view_res_bank_form_inherit1" model="ir.ui.view">
+            <field name="name">res.bank.form.rib.inherit1</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form" />
+            <field name="arch" type="xml">
+                <field name="bank_bic" position="replace">
+                    <field name="swift_ibna" />
+                </field>
+            </field>
+        </record>
+
+        <!-- purchase
+        <record id="view_purchase_order_form_inherit1" model="ir.ui.view">
+            <field name="name">purchase.order.inherit1</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_subtotal']" position='after'>
+                    <field name="pur_price_unit" />
+                    <field name="pur_price_subtotal" />
+                    <field name="pur_currency_id"/>
+                </xpath>
+            </field>
+        </record>  -->
+
+        <!-- sale -->
+        <record id="view_order_form_purchase_currency" model="ir.ui.view">
+            <field name="name">sale.order.purchase.currency</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form[@string='Sales Order Lines']/group/group/div[@name='discount']" position='after'>
+                    <field name="pur_price_unit" invisible="1"/>
+                    <field name="pur_price_subtotal" invisible="1"/>
+                    <field name="pur_currency_id"/>
+                </xpath>
+                <xpath expr="//tree[@string='Sales Order Lines']/field[@name='price_subtotal']" position='after'>
+                    <field name="pur_price_unit" on_change="pur_price_change(pur_price_unit, parent.pricelist_id,pur_currency_id, context)"/>
+                    <field name="pur_currency_id"/>
+                </xpath>				
+            </field>
+        </record>
+		
+
+        <record id="view_partner_add_onecurrency" model="ir.ui.view">
+            <field name="name">res.partner.add_onecurrency</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+				<xpath expr="//sheet/group/group/field[@name='website']" position='after'>
+					<field name="one_currency"/>
+					<field name="half_price"/>
+				</xpath>
+				<xpath expr="//sheet/group/group/field[@name='title']" position='after'>
+					<field name="section_id"/>
+				</xpath>				
+			</field>
+        </record>			
+
+        <record id="view_product_discount_tree" model="ir.ui.view">
+            <field name="name">product.discount.tree</field>
+            <field name="model">product.discount</field>
+            <field name="arch" type="xml">
+                <tree string="Product Discount" editable="button">
+                    <field name="country"/>
+                    <field name="partner_id"/>
+					<field name="brands"/>
+					<field name="type"/>
+					<field name="duration"/>
+					<field name="amount"/>
+                    <field name="discount" string="Discount(%)"/>
+               </tree>
+            </field>
+        </record>
+
+        <record id="view_product_discount_filter" model="ir.ui.view">
+            <field name="name">product.discount.select</field>
+            <field name="model">product.discount</field>
+            <field name="arch" type="xml">
+                <search string="Search Product Discount">
+                    <field name="type"/>
+                    <field name="partner_id" operator="child_of"/>
+                    <field name="duration"/>
+					<field name="country"/>
+               </search>
+            </field>
+        </record>
+
+        <record id="product_discount_action" model="ir.actions.act_window">
+            <field name="name">Brands Discount</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.discount</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_product_discount_tree"/>
+            <field name="search_view_id" ref="view_product_discount_filter"/>
+        </record>
+
+        <menuitem action="product_discount_action" name="Brands Discount" id="menu_product_discount" parent="base.menu_product" sequence="31"/>
+		
+		<record id="view_picking_add_dest" model="ir.ui.view">
+            <field name="name">stock.picking.add_dest</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">			
+				<field name="note" position="after">
+				    <div class="oe_clear"/>	
+                    <strong>Express Delaration: </strong><br/>
+					<field name="delaration"/>
+                </field>						
+           </field>
+        </record>		
+
+    </data>
+</openerp>

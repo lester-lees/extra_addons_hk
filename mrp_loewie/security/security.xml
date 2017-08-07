@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data noupdate="1">
+		<record id="ir_model_access_loewie_bom" model="ir.model.access">
+			<field name="model_id" ref="mrp_loewie.model_loewie_bom"/>
+			<field eval="1" name="perm_read"/>
+			<field eval="1" name="perm_unlink"/>
+			<field eval="1" name="perm_write"/>
+			<field eval="1" name="perm_create"/>
+			<field eval="&quot;&quot;&quot;access loewie bom&quot;&quot;&quot;" name="name"/>
+			<field name="group_id" ref="stock.group_stock_manager"/>			
+		</record>
+		<record id="ir_model_access_loewie_pbill" model="ir.model.access">
+			<field name="model_id" ref="mrp_loewie.model_loewie_production"/>
+			<field eval="1" name="perm_read"/>
+			<field eval="1" name="perm_unlink"/>
+			<field eval="1" name="perm_write"/>
+			<field eval="1" name="perm_create"/>
+			<field eval="&quot;&quot;&quot;access loewie production&quot;&quot;&quot;" name="name"/>
+			<field name="group_id" ref="stock.group_stock_manager"/>			
+		</record>		
+	</data>
+</openerp>

@@ -1,0 +1,5 @@
+#. module: sale_webkit_report_loewie
+#: model:ir.actions.act_window,name:sale_webkit_report_loewie.product_discount_action
+#: model:ir.ui.menu,name:sale_webkit_report_loewie.menu_product_discount
+msgid "Brands Discount"
+msgstr "品牌折扣"

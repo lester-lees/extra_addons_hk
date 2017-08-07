@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_check_so_stock" model="ir.ui.view">
+            <field name="name">Check sale_order stock</field>
+            <field name="model">sale.order</field>
+			<field name="type">form</field>
+			<field name="priority">32</field>
+            <field name="arch" type="xml">
+			<form>
+			<group>
+				<field name="name"/>
+			</group>
+			<group>
+				<strong>Delete Selected Lines: </strong><button name="del_lines" string="Delete" type="object"/>
+				<field name="state" invisible="True"/>
+			</group>			
+				<notebook>
+				<page string="Products">
+				<field name="order_line" domain="[('product_id.product_type','!=','Service')]">
+					<tree string="Sale Order Stock" editable="bottom" colors="red:shortage>0">
+						<field name="product_id"/>
+						<field name="product_uom_qty"/>
+						<field name="shortage"/>
+						<field name="qty_on_hand"/>
+						<field name="qty_reserved"/>
+						<field name="qty_self_reserved"/>						
+						<field name="qty_on_the_way" invisible="True"/>
+						<field name="delete"/>
+						<field name="state" invisible="True"/>
+					</tree>
+				</field>
+				</page>
+				</notebook>						
+			</form>
+            </field>			
+        </record>
+		
+		<record id="view_order_form_add_pcs_per_carton" model="ir.ui.view">
+            <field name="name">sale.order.add_pcs_per_carton</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">			
+				<xpath expr="//header/button[@name='invoice_cancel']" position="after">               
+					<button name="check_stock" string="检查库存" type="object" groups="base.group_user"/>
+				</xpath>				
+                <xpath expr="//tree[@string='Sales Order Lines']/field[@name='name']" position='after'>
+                    <field name="single_weight"/>			
+                </xpath>
+			</field>
+		</record>	
+
+        <record id="view_partner_from_location" model="ir.ui.view">
+            <field name="name">res.partner.from_location</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+				<xpath expr="//sheet/group/group/field[@name='title']" position='after'>
+					<field name="from_location"/>
+				</xpath>				
+			</field>
+        </record>		
+	</data>
+</openerp>

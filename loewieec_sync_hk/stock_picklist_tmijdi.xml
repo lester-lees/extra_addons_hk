@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="stock_picking_tmijdi">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="stock_picking_loewie.external_layout_stock">
+                        <div class="page">
+							<t t-if="o.picking_type_id.code != 'incoming'"><h3>Picking List : <span t-field="o.name"/> </h3></t>
+							<t t-if="o.picking_type_id.code == 'incoming'"><h3>Goods Received Note(GRN) : <span t-field="o.name"/> </h3></t>
+							<t t-if="o.sale_id"><h4>Invoice: <span t-field="o.partner_id.ref"/><t t-if="not o.partner_id.ref"><span t-field="o.partner_id.parent_id.ref"/></t>-<span t-field="o.sale_id.name"/></h4></t>						
+						
+							<table  class="dest_address" style="table-layout:fixed; width: 100%">			
+								<tr><td width="12%"><strong>Date: </strong></td><td><span t-field="o.date"/></td></tr>						
+								<tr t-if="o.note"><td width="12%"><strong>Note:</strong></td><td><span t-field="o.note"/></td></tr>
+							</table>						
+
+								<t t-set="p_qty" t-value="0"/>		
+								<t t-set="p_reserved" t-value="0"/>
+								<t t-if="o.move_lines">
+									<t t-foreach="group_lines_by_coe(o).items()" t-as="coe_no">
+										<table class="table table-condensed">
+										  <thead>
+											<tr>
+												<th width="3%"><strong>Pos</strong></th>
+												<th width="7%"><strong>COE NO</strong></th>	
+												<th width="5%" class="text-right"><strong>TMI-JDI NO</strong></th>						
+												<th width="40%"><strong>Product</strong></th>
+												<!-- th width="10%"><strong>Description</strong></th -->
+												<th width="10%"><strong>Ean13</strong></th>												
+												<th width="10%"><strong>Loc frm</strong></th>
+												<th width="10%"><strong>Loc to</strong></th>
+												<th width="5%" class="text-right"><strong>Qty</strong></th>
+												<th width="10%" class="text-right"><strong>Reserved</strong></th>
+											</tr>
+										  </thead>
+										  <tbody>	
+											<tr t-foreach="coe_no[1]['lines']" t-as="pack_operation">
+												<td width="3%"><t t-esc="pack_operation['id']"/></td>
+												<td width="7%"><span t-esc="pack_operation['coe_no']"/></td>	
+												<td width="5%" class="text-right"><span t-esc="pack_operation['tmi_jdi_no']"/></td>														
+												<t t-set="p_qty" t-value="p_qty + pack_operation['qty']"/>
+												<t t-set="p_reserved" t-value="p_reserved + pack_operation['availability']"/>
+												
+												<td width="40%"><span t-esc="pack_operation['product_name']"/></td>
+												<!-- td width="10%"><span t-esc="pack_operation['description']"/></td -->
+												<td width="10%"><span t-esc="pack_operation['ean13']"/></td>
+												<td width="10%"><span t-esc="pack_operation['loc_src']"/></td>
+												<td width="10%"><span t-esc="pack_operation['loc_dest']"/></td>
+												<td width="5%" class="text-right"><span t-esc="int(pack_operation['qty'])"/></td>
+												<td width="10%" class="text-right"><strong><span t-esc="pack_operation['availability']"/></strong></td>
+											</tr>
+										  </tbody>
+										</table>
+										<span t-esc="coe_no[1]['coe_info']"/><br/><br/>
+									</t>
+								</t>						
+							<strong>Qty Total: <t t-esc="int(p_qty)"/></strong><br/>
+							<strong>Reserved Total: <t t-esc="int(p_reserved)"/></strong><br/>
+							<strong>制单人：<t t-if="o.sale_id"><span t-field="o.sale_id.user_id"/></t><t t-if="not o.sale_id"><span t-field="o.create_uid"/></t></strong>
+                        </div>
+                    </t>
+                 </t>
+             </t>
+        </template>
+
+		<report 
+		string="Picking List TMI_JDI" 
+		id="action_picking_tmijdi" 
+		model="stock.picking" 
+		report_type="qweb-pdf"
+		name="loewieec_sync_hk.stock_picking_tmijdi" 
+		file="loewieec_sync_hk.stock_picking_tmijdi"/>
+		
+	</data>
+</openerp>

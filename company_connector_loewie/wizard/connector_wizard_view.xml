@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_connector_wizard" model="ir.ui.view">
+            <field name="name">Copy Oders</field>
+            <field name="model">connector.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Scheduler Parameters">
+                    <group>
+                        <field name="src_company_id"/>
+                        <field name="dest_company_id"/>
+                        <field name="src_order"/>
+                        <field name="src_orde_no"/>
+                    </group>
+                    <footer>
+                        <button name="apply" string="Copy Order" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+         <act_window name="Copy Orders"
+            res_model="connector.wizard"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_connector_wizard"/>
+
+            <menuitem action="action_connector_wizard" name="Copy Purchase Orders" id="menu_connector_wizard" parent="base.menu_sales" sequence="20"/>
+            <menuitem action="action_connector_wizard" name="Copy Sales Orders" id="menu_connector_wizard2" parent="purchase.menu_procurement_management" sequence="20"/>
+    </data>
+</openerp>

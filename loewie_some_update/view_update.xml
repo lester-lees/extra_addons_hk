@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="show_all_transfer_date" model="ir.ui.view">
+            <field name="name">Show_AllUsers_Transfer_Date</field>
+            <field name="model">stock.picking</field>
+			<field name="type">form</field>
+			<field name="priority">32</field>
+			<field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/notebook/page[@string='Additional Info']/group/group/field[@name='date_done']" position='replace'>
+					<field name="date_done"/>
+				</xpath>
+            </field>
+			
+        </record>
+		
+				
+	</data>
+</openerp>

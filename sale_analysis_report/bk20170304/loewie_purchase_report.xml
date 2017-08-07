@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_loewie_purchase_order_graph">
+            <field name="name">loewie.purchase.graph</field>
+            <field name="model">loewie.purchase.report</field>
+            <field name="arch" type="xml">
+                <graph string="Purchase Orders Statistics" type="pivot">
+                 <field name="section_id" type="row"/>
+                 <field name="month_confirm" type="col"/>
+                 <field name="product_uom_qty" type="measure"/>					 
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_loewie_purchase_order_search" model="ir.ui.view">
+        <field name="name">loewie.purchase.order.search2</field>
+        <field name="model">loewie.purchase.report</field>
+        <field name="arch" type="xml">
+            <search string="Sales Analysis">				
+                <field name="date"/>
+                <field name="date_confirm"/>
+                <filter string="This Year" name="year" invisible="1" domain="[('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"/>
+                <filter name="Quotations" domain="[('state','in',('draft','sent'))]"/>				
+                <filter name="Sales" string="Sales" domain="[('state','not in',('draft','sent','cancel','manager_confirm'))]"/>
+                <separator/>
+                <filter string="My Sales" help="My Sales" domain="[('user_id','=',uid)]"/>
+                <field name="partner_id"/>
+                <field name="name_template"/>
+                <field name="year_confirm"/>
+                <field name="month_confirm"/>				
+                <field name="sale_order"/>				
+				<field name="product_type"/>
+                <field name="user_id"/>
+                <group expand="0" string="Extended Filters">
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group expand="1" string="Group By">				
+                    <filter string="Year" name="year_confirm" context="{'group_by':'year_confirm'}"/>
+                    <filter string="Month" name="month_confirm" context="{'group_by':'month_confirm'}"/>					
+                    <filter string="Order" name="sale_order" context="{'group_by':'sale_order'}"/>
+                    <filter string="Sample" name="is_sample" context="{'group_by':'is_sample'}"/>					
+                    <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                    <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <separator/>
+                    <filter string="Order Month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
+                    <filter string="Country" context="{'group_by':'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_loewie_purchase_order_report" model="ir.actions.act_window">
+        <field name="name">Loewie Report for Purchase</field>
+        <field name="res_model">loewie.purchase.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_loewie_purchase_order_graph"></field>
+        <field name="context">{'search_default_orders': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="help">Loewie Report for Purchase.</field>
+    </record>
+    <menuitem name="Loewie Purchase" action="action_loewie_purchase_order_report" id="menu_action_loewie_purchase_report" parent="base.next_id_73" sequence="3"/>	
+    </data>
+</openerp>

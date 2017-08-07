@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_stock_transfer_loewie" model="ir.ui.view">
+            <field name="name">Transfer details Loewie</field>
+            <field name="model">stock.transfer_details</field>
+            <field name="arch" type="xml">
+                <form string="Transfer details" version="7">
+                    <field name="picking_source_location_id" invisible="True"/>
+                    <field name="picking_destination_location_id" invisible="True"/>
+					<group colspan="1" col="2">
+						<field name="default_package" domain="[('picking_id', '=', picking_id)]"/>
+						<field name="picking_id" context="{'picking_id':picking_id}" invisible="1"/>
+						<button name="set_packno" string="Put in Pack" type="object"/>			
+						<button name="check_all_unpacked_products" string="Check All" type="object"/>
+						<button name="uncheck_all_unpacked" string="Uncheck All" type="object"/>
+					</group>
+					<notebook>
+						<page string="Unpacked Products">
+							<field name="item_ids_unpacked" context="{'default_sourceloc_id':picking_source_location_id,'default_destinationloc_id':picking_destination_location_id}" nolabel="1">							
+								<tree string="Inventory Details" editable="bottom" >                                
+									<field name="product_id" required="True"  context="{'uom':product_uom_id}" on_change="product_id_change(product_id,product_uom_id,context)"/>
+									<button name="split_quantities" string="Split" type="object" icon="STOCK_PREFERENCES" attrs="{'invisible': [('quantity', '=', 1)]}"/>
+									<field name="product_uom_id" options="{&quot;no_open&quot;: True}" groups="product.group_uom"/>
+									<field name="sourceloc_id" domain="[('id', 'child_of', parent.picking_source_location_id)]"/>
+									<field name="destinationloc_id" domain="[('id', 'child_of', parent.picking_destination_location_id)]"/>
+									<field name="quantity"/>
+									<field name="check" widget="checkbox"/>
+									<field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': destinationloc_id}"/>
+									<button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}" groups="stock.group_tracking_lot"/>
+									
+								</tree>
+							</field>
+						</page>
+						<page string="Packed Products">
+							<field name="item_ids_packed" context="{'default_sourceloc_id':picking_source_location_id,'default_destinationloc_id':picking_destination_location_id}" nolabel="1">							
+								<tree string="Inventory Details" editable="bottom" >                                
+									<field name="product_id" required="True"  context="{'uom':product_uom_id}" on_change="product_id_change(product_id,product_uom_id,context)"/>
+									<button name="split_quantities" string="Split" type="object" icon="STOCK_PREFERENCES" attrs="{'invisible': [('quantity', '=', 1)]}"/>
+									<field name="product_uom_id" options="{&quot;no_open&quot;: True}" groups="product.group_uom"/>
+									<field name="sourceloc_id" domain="[('id', 'child_of', parent.picking_source_location_id)]"/>
+									<field name="destinationloc_id" domain="[('id', 'child_of', parent.picking_destination_location_id)]"/>
+									<field name="quantity"/>
+									<field name="check" widget="checkbox"/>
+									<field name="result_package_id" groups="stock.group_tracking_lot" context="{'location_id': destinationloc_id}"/>
+									<button name="put_in_pack" string="Pack" type="object" icon="terp-product" attrs="{'invisible': [('result_package_id', '!=', False)]}" groups="stock.group_tracking_lot"/>									
+								</tree>
+							</field>
+						</page>
+					</notebook>
+                    <footer>
+                        <button name="do_detailed_transfer" string="_Apply" type="object" class="oe_highlight"/>
+                        or
+                        <button string="_Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+		<record id="view_picking_package_page" model="ir.ui.view">
+            <field name="name">stock.picking.package_page</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook" position='inside'>                         
+				<page string="Packages">
+					<field name="packages_ids" context="{'default_picking_id': active_id, 'default_location_id': location_dest_id}">
+						<tree string="Package" editable="bottom">
+							<field name="name"/>
+							<field name="id"/>
+							<field name="ul_id"/>
+							<field name="package_weight"/>
+							<field name="location_id"/>
+						</tree>
+					</field>
+				</page>
+				</xpath>				
+           </field>
+        </record>			
+		
+    </data>
+</openerp>

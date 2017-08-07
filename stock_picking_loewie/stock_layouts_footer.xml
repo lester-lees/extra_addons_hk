@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="external_layout_stock">
+    <!-- Multicompany -->
+    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+
+    <t t-call="report.external_layout_header" />
+    <t t-raw="0" />
+    <t t-call="stock_picking_loewie.external_layout_footer_stock" />
+</template>
+
+<template id="external_layout_footer_stock">
+    <div class="footer text-center" style="border-top: 1px solid black;">
+			<table class="table table-condensed">
+				<tr>
+					<td width="15%">Pick By:</td><td width="20%"></td>
+					<td width="10%">Checker:</td><td width="20%"></td>
+					<td width="15%">Pack By:</td><td width="20%"></td>					
+				</tr>
+			</table>				
+			<ul class="list-inline"><strong t-field="o.name"/> : <strong>Pages:</strong><li><span class="page"/></li><li>/</li><li><span class="topage"/></li></ul>
+    </div>      
+</template>
+
+</data>
+</openerp>

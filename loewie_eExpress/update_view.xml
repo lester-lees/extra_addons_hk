@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="sale_order_add_coe_button" model="ir.ui.view">
+            <field name="name">Sale Order Add COE Button</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name='state' position='before'>
+					<button name="import_tmall_csv_file" type='object' string='导入天猫收货人Csv文件' attrs="{'invisible': [('state','in',('done','cancel'))]}"/>
+					<button name="get_coe_no_for_lines" type='object' string='获取COE运单号' attrs="{'invisible': [('state','in',('done','cancel'))]}"/>		
+					<!-- button name="cancel_coe_no_for_lines" type='object' string='Cancel COE NO'/ -->						
+                </field>
+            </field>
+        </record>		
+		
+        <record id="view_product_add_coe_info" model="ir.ui.view">
+            <field name="name">product.product_coe_info</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                    <xpath expr="//field[@name='default_code']" position="after">
+						<field name="coe_weight"/>
+						<field name="coe_price"/>						
+						<field name="coe_class"/>					
+                    </xpath>       
+			</field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_coe_postcode_tree">
+            <field name="name">sale_coe_postcode</field>
+            <field name="model">sale.coe.postcode</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Coe Postcode" editable="bottom">
+                    <field name="id"/>	
+                    <field name="create_date"/>					
+                    <field name="province"/>
+					<field name="city"/>							
+                    <field name="postcode"/>						
+                </tree>
+            </field>
+        </record>		
+
+
+        <record id="action_sale_coe_postcode" model="ir.actions.act_window">
+            <field name="name">action sale_coe_postcode</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.coe.postcode</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="sale_coe_postcode_tree"/>
+        </record>
+		
+        <menuitem action="action_sale_coe_postcode" id="menu_sale_coe_postcode" parent="loewieec_sync_hk.menu_loewie_web_shop" sequence="8" name="Sale Coe Postcode" />		
+		
+    </data>
+</openerp>

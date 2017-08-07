@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		<template id="report_sale_order_libiya_document">
+			<t t-call="report.external_layout">
+				<div class="page">
+				    <t t-set="all_brand_total" t-value="0"/>
+					<div class="oe_structure"/>				
+					<h4>Invoice: <span t-field="o.partner_id.ref"/>-<span t-field="o.name"/></h4>
+					<p t-if="o.client_order_ref">Reference : <span t-field="o.client_order_ref"/></p>					
+				
+					<!--   Invoice Address start   -->					
+					 <table  class="dest_address" style="table-layout:fixed; width: 100%">			
+						<tr><td width="20%"><strong>Date: </strong></td><td><span t-field="o.date_order"/></td></tr>
+						
+						<tr><td width="20%"><strong>Company : </strong></td><td><span t-field="o.partner_invoice_id"/>
+						<t t-if="o.partner_invoice_id.function">, <span t-field="o.partner_invoice_id.function"/></t></td>
+						</tr>
+						
+						<tr>
+							<td width="20%"><strong>Invoice Address: </strong> </td>
+							<td><span t-field="o.partner_invoice_id.street"/><t t-if="not o.partner_invoice_id.street"><span t-field="o.partner_id.street"/>,<span t-field="o.partner_id.street2"/></t> <span t-field="o.partner_invoice_id.street2"/> , 
+							<span t-field="o.partner_invoice_id.city"/><t t-if="not o.partner_invoice_id.city"><span t-field="o.partner_id.city"/></t>, 								
+							<span t-field="o.partner_invoice_id.country_id.name"/><t t-if="not o.partner_invoice_id.country_id.name"><span t-field="o.partner_id.country_id.name"/></t>
+							<t t-if="o.partner_invoice_id.zip">, <strong>Zip:<span t-field="o.partner_invoice_id.zip"/></strong></t>
+							</td>
+						</tr>
+						
+						<tr t-if="o.partner_invoice_id.phone or o.partner_id.phone"><td width="20%"><strong>Phone:</strong> </td>
+						<td><span t-field="o.partner_invoice_id.phone"/>
+						<t t-if="not o.partner_invoice_id.phone"><span t-field="o.partner_id.phone"/></t></td>
+						</tr>
+						
+						<tr t-if="o.partner_invoice_id.mobile or o.partner_id.mobile"><td width="20%"><strong>Mobile:</strong> </td>
+						<td><span t-field="o.partner_invoice_id.mobile"/>
+						<t t-if="not o.partner_invoice_id.mobile"><span t-field="o.partner_id.mobile"/></t></td>
+						</tr>
+					 </table>
+
+					<!--   Shipping Address start   -->						 
+					 <table t-if="o.partner_invoice_id != o.partner_shipping_id"  class="dest_address" style="table-layout:fixed; width: 100%">								
+						<tr><td width="20%"><strong>Shipping Consignee: </strong></td><td><span t-field="o.partner_shipping_id"/>
+						<t t-if="o.partner_shipping_id.function">, <span t-field="o.partner_shipping_id.function"/></t></td>
+						</tr>
+						
+						<tr t-if="o.partner_shipping_id.street and o.partner_shipping_id.street != o.partner_invoice_id.street">
+							<td width="20%"><strong>Shipping Address: </strong> </td>
+							<td><span t-field="o.partner_shipping_id.street"/><t t-if="not o.partner_shipping_id.street"><span t-field="o.partner_id.street"/>,<span t-field="o.partner_id.street2"/></t> <span t-field="o.partner_shipping_id.street2"/> ,
+							<span t-field="o.partner_shipping_id.city"/><t t-if="not o.partner_shipping_id.city"><span t-field="o.partner_id.city"/></t>, 
+							<t t-if="o.partner_id.state_id">State: <span t-field="o.partner_id.state_id.name"/>, </t>
+							<span t-field="o.partner_shipping_id.country_id.name"/><t t-if="not o.partner_shipping_id.country_id.name"><span t-field="o.partner_id.country_id.name"/></t>
+							<t t-if="o.partner_shipping_id.zip">, <strong>Zip:<span t-field="o.partner_shipping_id.zip"/></strong></t>
+							</td>
+						</tr>
+						<tr t-if="o.partner_shipping_id.phone and o.partner_shipping_id.phone != o.partner_invoice_id.phone">
+							<td width="20%"><strong>Phone:</strong> </td>
+							<td><span t-field="o.partner_shipping_id.phone"/>
+							<t t-if="not o.partner_shipping_id.phone"><span t-field="o.partner_id.phone"/></t></td>
+						</tr>
+						
+						<tr t-if="o.partner_shipping_id.mobile and o.partner_shipping_id.mobile != o.partner_invoice_id.mobile"><td width="20%"><strong>Mobile:</strong> </td>
+						<td><span t-field="o.partner_shipping_id.mobile"/>
+						<t t-if="not o.partner_shipping_id.mobile"><span t-field="o.partner_id.mobile"/></t></td>
+						</tr>
+					 </table>
+
+					
+					<br/>
+					<b>Dear Sir/Madam: </b><br/>
+					<span>Thank you for your order! Please find the details below.</span>
+					<span>Kindly arrange the payment to our account number:</span><br/>
+					<t t-foreach="o.company_id.bank_ids" t-as="bank">
+						<t t-if="bank.bank_name == 'HSBC Hong Kong'">
+							<span t-field="bank.acc_number"/>
+							<span>at </span><span t-field="bank.bank_name"/>
+							<span>(SWIFT: HSBCHKHHHKH)  </span><span t-field="bank.swift_ibna"/>
+						</t>
+					    <t t-if="bank.bank_name == 'Paypal'">
+							<span> or via Paypal to</span>
+							<span t-field="bank.acc_number"/>.<br/>
+						</t>
+					</t>
+										
+				    <br/>
+					<t t-set="all_brand_total" t-value="0"/>
+					<t t-foreach="lines_group_by_brand_sample(order=o,one_currency=o.partner_id.one_currency).items()" t-as="cur_group">				
+						<!-- lines in one currency-->
+						<t t-set="p_currency" t-value="cur_group[1]['currency_name']"/>						
+						<t t-if="cur_group[1]['type'] != 'Replacement' and cur_group[1]['type'] != 'RMA' and cur_group[1]['type'] != 'Sample' and cur_group[1]['type'] != 'Shortship' and cur_group[1]['type'] != 'Service' and cur_group[1]['type'] != 'Promotion'">
+
+							<table class="table-condensed" width="100%">
+								<thead>
+									<tr>
+										<th width="5%">POS</th>
+										<th width="40%">Product Name</th>
+										<th width="10%">Remarks</th>
+										<th width="10%">Ean13</th>
+										<th width="10%">Code</th>
+										<th width="5%" class="text-right">Qty. </th>
+										<th width="5%" class="text-right">Price</th>
+										<th width="15%" class="text-right">Total</th>
+									</tr>
+								</thead>
+								
+								<t t-foreach="cur_group[1]['lines']" t-as="line">
+									<tr>
+										<td width="5%"><t t-esc="line['id'] or ' '"/></td>
+										<td width="40%"><t t-esc="line['product_name'] or ' '"/></td>
+										<td width="10%"><t t-esc="line['name'] or ' '"/></td>
+										<td width="10%"><t t-esc="line['ean13'] or ' '"/></td>
+										<td width="10%"><t t-esc="line['default_code'] or ' '"/></td>
+										<td width="5%" class="text-right">
+											<t t-esc="int(line['product_uom_qty'])"/>
+										</td>
+										<td width="5%" class="text-right">
+											<t t-esc="formatLang(line['price_unit'], dp='Account')"/>
+										</td>
+										<td width="15%" class="text-right">
+											<t t-esc="formatLang(line['price_total'], dp='Account')"/>
+										</td>
+									</tr>
+								</t>					
+							</table>						
+							
+							
+							<div class="row">
+								<div class="col-xs-3 pull-right">
+									<table class="table table-condensed">
+										<tr class="border-black">
+											<td width="90%"><strong>SubTotal(<t t-esc="cur_group[1]['currency_name']"/>) </strong></td>
+											<td class="text-right">
+												<span t-esc="cur_group[1]['subtotal']"/>
+											</td>
+										</tr>
+										<tr t-if="cur_group[1]['discount_amount'] != 0" class="border-black">
+											<td width="90%">Discount(<t t-esc="int(cur_group[1]['discount_rate'])"/>%)</td>
+											<td class="text-right">
+												<span t-esc="cur_group[1]['discount_amount']"/>
+											</td>
+										</tr>
+										<tr t-if="cur_group[1]['subtotal'] != cur_group[1]['subtotal_without_discount']" class="border-black">
+											<td width="90%"><strong>SubTotal(<t t-esc="cur_group[1]['currency_name']"/>)</strong></td>
+											<td class="text-right">
+												<span t-esc="cur_group[1]['subtotal_without_discount']"/>
+											</td>
+										</tr>
+										<t t-if="o.currency_id.name != cur_group[1]['currency_name']">
+											<tr class="border-black">
+												<td width="90%"><strong>SubTotal(<span t-field="o.currency_id.name"/>)</strong></td>
+												<td class="text-right">
+													<span t-esc="cur_group[1]['subtotal_in_order_currency']"/>
+												</td>
+											</tr>
+										</t>
+										<t t-set="all_brand_total" t-value="all_brand_total + cur_group[1]['subtotal_in_order_currency']"/>						
+									</table>
+								</div>
+							</div>
+						</t>					
+					</t>
+					
+					<!-- special promotion -->
+					<t t-foreach="lines_group_by_brand_sample(order=o,one_currency=o.partner_id.one_currency).items()" t-as="cur_group">		
+						<t t-if="cur_group[1]['type'] == 'Promotion'">
+							<h4>Special <t t-esc="cur_group[1]['type']"/></h4>
+							<table class="table-condensed" width="100%">
+								<thead>
+									<tr>
+										<th>POS</th>
+										<th>Product Name</th>
+										<th class="text-right">Ean13 </th>
+										<th class="text-right">Qty. </th>
+										<th class="text-right">Price</th>
+										<th class="text-right">Amount</th>
+										<th class="text-right" width="15%">Discount </th>
+										<th class="text-right">After.Disc</th>
+										<th class="text-right">Total(<span t-esc="o.currency_id.name"/>)</th>
+									</tr>
+								</thead>
+								
+								<t t-foreach="cur_group[1]['lines']" t-as="line">
+									<tr>
+										<td><t t-esc="line['id'] or ' '"/></td>
+										<td><t t-esc="line['product_name'] or ' '"/></td>
+										<td><t t-esc="line['ean13'] or ' '"/></td>
+										<td class="text-right">
+											<t t-esc="int(line['product_uom_qty'])"/>
+										</td>
+										<td class="text-right">
+											<t t-esc="line['price_unit']"/>
+										</td>
+										<td class="text-right">
+											<t t-esc="line['price_total']"/>(<t t-esc="line['currency_name']"/>)
+										</td>
+										<td class="text-right" width="15%">
+											<t t-esc="int(line['discount_rate'])"/>%, <t t-esc="line['line_discount_amount']"/>
+										</td>
+										<td class="text-right">
+											<t t-esc="round(line['price_total'] - line['line_discount_amount'],2)"/>(<t t-esc="line['currency_name']"/>)
+										</td>										
+										<td class="text-right">
+											<t t-esc="formatLang(line['total_without_discount_in_order_cur'], dp='Account')"/>
+										</td>										
+									</tr>
+								</t>
+							</table>
+							
+							<div class="row">
+								<div class="col-xs-3 pull-right">
+									<table class="table table-condensed">
+										<tr class="border-black">
+											<td width="90%"><strong>SubTotal(<span t-field="o.currency_id.name"/>)</strong></td>
+											<td class="text-right">
+												<span t-esc="cur_group[1]['subtotal_in_order_currency']"/>
+												<t t-set="all_brand_total" t-value="all_brand_total + cur_group[1]['subtotal_in_order_currency']"/>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</t>
+					</t>									
+					
+					<!--     samples  and shortships here -->
+					<t t-foreach="lines_group_by_brand_sample(order=o,one_currency=o.partner_id.one_currency).items()" t-as="cur_group">				
+						<!-- lines in one currency-->
+						<t t-if="cur_group[1]['type'] == 'Replacement' or cur_group[1]['type'] == 'Sample' or cur_group[1]['type'] == 'Shortship' or cur_group[1]['type'] == 'RMA'">
+							<h4><t t-esc="cur_group[1]['type']"/></h4>
+							<table class="table-condensed" width="100%">
+								<thead>
+									<tr>
+										<th width="5%">POS</th>
+										<th width="40%">Product Name</th>
+										<th width="10%">Remarks</th>
+										<th width="10%">Ean13</th>
+										<th width="10%">Code</th>										
+										<th width="5%" class="text-right">Qty. </th>
+										<th width="5%" class="text-right">Price</th>
+										<th width="15%" class="text-right">Total</th>
+									</tr>
+								</thead>
+								
+								<t t-foreach="cur_group[1]['lines']" t-as="line">
+									<tr>
+										<td width="5%"><t t-esc="line['id'] or ' '"/></td>
+										<td width="40%"><t t-esc="line['product_name'] or ' '"/></td>
+										<td width="10%"><t t-esc="line['name'] or ' '"/></td>
+										<td width="10%"><t t-esc="line['ean13'] or ' '"/></td>
+										<td width="10%"><t t-esc="line['default_code'] or ' '"/></td>
+										<td width="5%" class="text-right">
+											<t t-esc="int(line['product_uom_qty'])"/>
+										</td>
+										<td width="5%" class="text-right">0.00</td>
+										<td width="15%" class="text-right">0.00</td>
+									</tr>
+								</t>					
+							</table>
+							<div class="row">
+								<div class="col-xs-3 pull-right">
+									<table class="table table-condensed">
+										<tr class="border-black">
+											<td width="90%"><strong>SubTotal(<span t-field="o.currency_id.name"/>) </strong></td>
+											<td class="text-right">0.00</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+                        </t>							
+					</t>
+						
+					<div class="row">
+						<t t-set="order_total" t-value="order_discount(o)"/>
+						<div class="col-xs-6 pull-right">
+							<table class="table table-condensed">
+								<tr class="border-black">
+									<td width="75%"><strong>Total(<span t-field="o.currency_id.name"/>)</strong></td>
+									<td class="text-right">
+										<span t-esc="all_brand_total"/>
+									</td>
+								</tr>
+								
+								<t t-foreach="order_total['other']" t-as="other_fee">
+									<tr class="border-black">
+									    <t t-if="other_fee[0] != 'Service HK Account Balance'">
+											<td width="75%"><t t-esc="other_fee[0] or ' '"/></td>
+											<td class="text-right">
+												<span t-esc="other_fee[1]"/>
+												<t t-set="all_brand_total" t-value="all_brand_total + other_fee[1]"/>
+											</td>
+										</t>
+									</tr>
+								</t>
+								
+								<t t-foreach="order_total['other']" t-as="other_fee">
+									<tr class="border-black">
+										<t t-if="other_fee[0] == 'Service HK Account Balance'">
+											<td width="75%"><t t-esc="other_fee[0] or ' '"/></td>
+											<td class="text-right">
+												<span t-esc="-(other_fee[1])"/>
+												<t t-set="all_brand_total" t-value="all_brand_total + other_fee[1]"/>
+											</td>										
+										</t>
+									</tr>
+								</t>
+								<tr class="border-black">
+									<td width="75%"><strong>Gross Total(<span t-field="o.currency_id.name"/>)</strong></td>
+									<td class="text-right">
+										<span t-esc="all_brand_total"/>
+									</td>
+								</tr>
+								
+								<t t-if="o.user_id.name in ['anthony','ray']">
+									<tr class="border-black">
+										<td width="75%"><strong>Rounding(<span t-field="o.currency_id.name"/>)</strong></td>
+										<td class="text-right">
+											<span t-esc="rounding(all_brand_total)"/>
+										</td>
+									</tr>								
+								</t>
+								
+							</table>
+						</div>
+					</div>
+					
+					<div><p><strong>Best regards, </strong><br/><strong t-field="o.user_id.name"> </strong></p></div>					
+				</div>			
+
+			</t>
+		</template>
+
+	<template id="report_sale_order_loewie">
+		<t t-call="report.html_container">
+			<t t-foreach="doc_ids" t-as="doc_id">
+				<t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'sale_webkit_report_loewie.report_sale_order_libiya_document')"/>
+			</t>
+		</t>
+	</template>
+        <report 
+            id="report_sale_order_libiya_act"
+            string="Normal Invoice"
+            model="sale.order" 
+            report_type="qweb-pdf"
+            file="sale_webkit_report_loewie.report_sale_order_loewie" 
+            name="sale_webkit_report_loewie.report_sale_order_loewie"             
+        />
+    </data>
+</openerp>

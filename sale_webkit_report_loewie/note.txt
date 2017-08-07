@@ -1,0 +1,1 @@
+shortship, replacement, sample, 最好放在正常产品的后面录入，这样在仓库出货单界面打印出来的海关发票，能正常显示价格

@@ -1,0 +1,9 @@
+.openerp .oe_leftbar a.oe_logo img { width:8px; height: auto}
+.openerp .oe_leftbar:hover a.oe_logo img { width:200px;}
+.openerp .oe_leftbar, .openerp .oe_leftbar > div {width:8px;}
+.openerp .oe_leftbar:hover, .openerp .oe_leftbar:hover > div {width:200px;}
+.openerp .oe_leftbar .oe_secondary_menus_container, .openerp .oe_leftbar > div > div > div > div.oe_secondary_menus_container{width:8px; overflow: hidden;}
+.openerp .oe_leftbar:hover .oe_secondary_menus_container{width:200px; overflow: auto;}
+.openerp .oe_secondary_submenu .oe_menu_text { overflow:visible; }
+.openerp .oe_secondary_menu_section {white-space:nowrap;}
+.oe_footer{display:none;}

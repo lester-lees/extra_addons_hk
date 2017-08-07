@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="stock_packing_loewie">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                             <h3>Packing List: <span t-field="o.name"/></h3>
+							<t t-if="o.sale_id"><h3>Invoice: <span t-field="o.partner_id.ref"/><t t-if="not o.partner_id.ref"><span t-field="o.partner_id.parent_id.ref"/></t>-<span t-field="o.sale_id.name"/></h3></t>
+							<t t-if="not o.sale_id"><h4>Source : <span t-field="o.origin"/></h4></t>
+							 
+							<table  class="dest_address" style="table-layout:fixed; width: 100%">			
+								<tr><td width="12%"><strong>Date: </strong></td><td><span t-field="o.date"/></td></tr>
+								
+								<tr><td width="12%"><strong>Shipper: </strong> </td><td><span>Loewie Trading Ltd. 4C, 4F., Mai On Industrial Building,  17 -21 Kung Yip Street Chung, NT, Hong Kong </span></td></tr>									
+								
+								<tr><td width="12%"><strong>Consignee: </strong></td><td><span t-field="o.partner_id"/>
+								<t t-if="o.partner_id.function">, <span t-field="o.partner_id.function"/></t></td>
+								</tr>
+								
+								<tr><td width="12%"><strong>Address: </strong> </td>
+								<td><span t-field="o.partner_id.street"/>,<t t-if="not o.partner_id.street"><span t-field="o.partner_id.parent_id.street"/>,<span t-field="o.partner_id.parent_id.street2"/></t>
+								<span t-field="o.partner_id.street2"/></td>
+								</tr>
+								
+								<tr><td width="12%"></td>
+									<td>
+										<span t-field="o.partner_id.city"/> 
+										<t t-if="not o.partner_id.city"><span t-field="o.partner_id.parent_id.city"/>,</t> 
+										
+										<span t-field="o.partner_id.country_id.name"/>
+										<t t-if="not o.partner_id.country_id.name"><span t-field="o.partner_id.parent_id.country_id.name"/></t>
+									</td>
+								</tr>
+								<tr><td width="12%"><strong>Phone:</strong> </td>
+								<td><span t-field="o.partner_id.phone"/>
+								<t t-if="not o.partner_id.phone"><span t-field="o.partner_id.parent_id.phone"/></t></td>
+								</tr>
+								
+								<tr><td width="12%"><strong>Mobile:</strong> </td>
+								<td><span t-field="o.partner_id.mobile"/>
+								<t t-if="not o.partner_id.mobile"><span t-field="o.partner_id.parent_id.mobile"/></t></td>
+								</tr>
+							</table>
+							 
+							 
+								<br/>
+								<t t-set="total_qty" t-value="0"/>								
+								<t t-set="total_weight" t-value="0"/>
+
+								<t t-if="o.pack_operation_ids">
+									<t t-foreach="group_op_lines(o).items()" t-as="package_no">	
+										<table class="table table-condensed">
+										  <thead>
+											<tr>
+												<th width="10%"><strong>Carton No.</strong></th>
+												<th width="40%"><strong>Product</strong></th>
+												<th width="20%"><strong>Ean13</strong></th>
+												<th width="20%"><strong>Code</strong></th>
+												<th width="10%"><strong>Quantity</strong></th>
+											</tr>
+										  </thead>
+										  <tbody>																				  
+												<tr t-foreach="package_no[1]['lines']" t-as="pack_operation">
+													<td><span t-esc="package_no[1]['package_no']"/></td>
+													<td><span t-esc="pack_operation['product_name']"/></td>
+													<td><span t-esc="pack_operation['ean13']"/></td>
+													<td><span t-esc="pack_operation['code']"/></td>
+													<td><span t-esc="int(pack_operation['qty'])"/></td>
+													<t t-set="total_qty" t-value="total_qty + pack_operation['qty']"/>					
+												</tr>										
+											</tbody>
+										</table>
+										<t t-set="total_weight" t-value="total_weight + package_no[1]['weight']"/>
+										<div class="row">
+											<div class="col-xs-6 pull-right">
+												<table class="table table-condensed">
+													<tr class="border-black">
+														<td width="70%"><strong>Dimension:<t t-esc="package_no[1]['dimension']"/></strong></td>
+														<td width="30%"><strong>G.W.(kg):<t t-esc="package_no[1]['weight']"/></strong></td>
+													</tr>
+												</table>
+											</div>
+										</div>
+									</t>
+								</t>						
+							<br/><strong>Total Quantity: <t t-esc="int(total_qty)"/><br/>
+							Total Weight: <t t-esc="round(total_weight,2)"/></strong>
+                        </div>
+                    </t>
+                 </t>
+             </t>
+        </template>
+
+		<report 
+		string="Packing List" 
+		id="action_report_packing" 
+		model="stock.picking" 
+		report_type="qweb-pdf"
+		name="stock_picking_loewie.stock_packing_loewie" 
+		file="stock_picking_loewie.stock_packing_loewie"/>
+		
+	</data>
+</openerp>

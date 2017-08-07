@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	
+        <record id="view_loewie_bom_tree" model="ir.ui.view">
+            <field name="name">loewie.bom.tree</field>
+            <field name="model">loewie.bom</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Loewie BOM">
+                    <field name="parent_id"/> 
+                    <field name="product_id"/>
+                    <field name="qty_need"/>
+                    <field name="name"/>					
+                    <field name="create_uid"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_loewie_bom_form" model="ir.ui.view">
+            <field name="name">loewie.bom.form</field>
+            <field name="model">loewie.bom</field>
+            <field name="arch" type="xml">
+                <form string="Loewie BOM">
+					<div>
+						<group>
+							<field name="parent_id"/> 
+							<field name="product_id"/>
+							<field name="name"/>
+						</group>
+						<group>
+							<field name="qty_need"/>
+							<field name="create_uid"/>
+						</group>
+					</div>
+                </form>
+            </field>
+        </record>
+		
+	
+        <record id="view_loewie_production_tree" model="ir.ui.view">
+            <field name="name">loewie.production.tree</field>
+            <field name="model">loewie.production</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Loewie production">
+                    <field name="id"/> 
+                    <field name="product_id"/>                    
+					<field name="produce_qty"/> 
+                    <field name="note"/>
+                    <field name="state"/>					
+                    <field name="date_start"/>
+                    <field name="date_finish"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_loewie_production_form" model="ir.ui.view">
+            <field name="name">loewie.production.form</field>
+            <field name="model">loewie.production</field>
+            <field name="arch" type="xml">
+                <form string="Loewie production">
+				
+                    <header>
+						<button name="set_to_draft" states="expanded,confirm" string="Set To Draft" type="object" groups="base.group_user"/>					
+
+						<button name="expand_produce"  states="draft" class="oe_highlight" string="Step 1: Expand Produce" type="object" groups="base.group_user"/>					
+						<button name="confirm_produce"  states="expanded" class="oe_highlight" string="Step 2: Confirm Produce" type="object" groups="base.group_user"/>
+						<button name="start_produce"  states="confirm" class="oe_highlight" string="Step 3: Start Produce" type="object" groups="base.group_user"/>					
+						
+                        <field name="state" widget="statusbar" statusbar_visible="cancel,draft,expanded,confirm,done" statusbar_colors='{"expanded":"blue"}'/>
+					</header>	
+					
+					<group>
+						<group>
+							<field name="product_id"/> 
+							<field name="state" invisible="0"/> 
+							<field name="note"/>
+							<field name="create_uid"/>
+						</group>
+						<group>
+							<field name="produce_qty"/>
+							<field name="date_start"/>
+							<field name="date_finish"/>
+						</group>
+					</group>
+					
+                    <notebook>
+                        <page string="Move Lines">
+                            <field name="produce_lines">
+								<tree colors="grey:scrapped == True" string="Stock Moves" editable = "buttom">
+									<field name="product_id" on_change="onchange_product_id(product_id,12,7, 3)"/>
+									<field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
+									<field name="product_uom" string="UOM" invisible="1"/>
+									<field name="date" invisible="0"/>
+									<field name="product_uos_qty" groups="product.group_uos" invisible="1"/>
+									<field name="product_uos" groups="product.group_uos" invisible="1"/>
+									<field name="location_id" groups="stock.group_locations" invisible="0"/>
+									<field name="picking_id" invisible="0"/>
+									<field name="create_date" invisible="0"/>
+									<field name="date_expected" invisible="1"/>
+									<button name="141" string="Scrap Products" type="action" icon="terp-gtk-jump-to-ltr" context="{'scrap': True}" states="draft,waiting,confirmed,assigned" groups="stock.group_stock_user"/>
+									<field name="scrapped" invisible="1"/>
+									<field name="availability" invisible="0"/>
+									<field name="reserved_availability" invisible="0"/>
+									<field name="location_dest_id" groups="stock.group_locations"/>
+									<field name="remaining_qty" invisible="0"/>
+									<field name="string_availability_info"/>
+									<field name="state"/>
+								</tree>
+                            </field>									
+                        </page>
+                    </notebook>
+
+                </form>
+            </field>
+        </record>	
+	
+        <menuitem name="Loewie.MRP" id="menu_mrp_root" groups="stock.group_stock_manager,purchase.group_purchase_user" sequence="90"/>	
+        <menuitem id="menu_mrp_main" parent="menu_mrp_root" name="Loewie MRP" sequence="0"/>
+		
+        <record id="mrp_open_view_bom" model="ir.actions.act_window">
+            <field name="name">Bill Of Materials</field>
+            <field name="res_model">loewie.bom</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to view BOM.
+              </p><p>
+                view BOM.
+              </p>
+            </field>
+        </record>				
+        <menuitem action="mrp_open_view_bom" id="menu_mrp_open_view_bom" sequence="3" parent="menu_mrp_main"/>
+		
+
+        <record id="mrp_open_view_produce_bill" model="ir.actions.act_window">
+            <field name="name">Production Bill</field>
+            <field name="res_model">loewie.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to view production.
+              </p><p>
+                view production.
+              </p>
+            </field>
+        </record>		
+        <menuitem action="mrp_open_view_produce_bill" id="menu_mrp_open_view_produce_bill" sequence="4" parent="menu_mrp_main"/>	
+				
+        <record id="view_execute_sqlstatement_tree" model="ir.ui.view">
+            <field name="name">loewie.sqlstatement.tree</field>
+            <field name="model">loewie.sqlstatement</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Loewie BOM">
+                    <field name="name"/> 
+                    <field name="statement"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_execute_sqlstatement_form" model="ir.ui.view">
+            <field name="name">loewie.sqlstatement.from</field>
+            <field name="model">loewie.sqlstatement</field>
+            <field name="arch" type="xml">
+                <form string="Loewie BOM">
+                    <header>
+						<button name="do_sql_execute" string="Execute" type="object" groups="base.group_user" context="{'statement':statement}"/>
+						<button name="update_sale_order_total" string="Update Amount Total of saleorder" type="object" groups="base.group_user" context="{'statement':statement}"/>		
+					</header>					
+					<div>
+						<group>
+						<field name="name"/> 
+						<field name="remark"/> 						
+						<field name="statement"/>
+						</group>
+					</div>
+					<div>
+						<field name="result"/>
+					</div>					
+                </form>
+            </field>
+        </record>
+        <record id="act_execute_sqlstatement" model="ir.actions.act_window">
+            <field name="name">Loewie Sqlstatement</field>
+            <field name="res_model">loewie.sqlstatement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="view_id" eval="False"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to view Sqlstatement.
+              </p><p>
+                view Sqlstatement.
+              </p>
+            </field>
+        </record>		
+        <menuitem action="act_execute_sqlstatement" id="menu_execute_sqlstatement" sequence="4" parent="menu_mrp_main"/>		
+				
+				
+	</data>
+</openerp>

@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="ecshop_product_tmalljd_tree">
+            <field name="name">TMall JD Products</field>
+            <field name="model">product.tmalljd</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="TMall JD Products">
+                    <field name="id"/>
+                    <field name="write_date"/>
+                    <field name="create_date"/>					
+                    <field name="erp_product_id"/>
+                    <field name="erp_product_set"/>						
+					<field name="erp_ean13"/>							
+                    <field name="ec_shop_id"/>
+                    <field name="ec_num_iid"/> 
+                    <field name="ec_sku_id"/>
+                    <field name="ec_title"/> 
+                    <field name="ec_price"/>
+                    <field name="ec_color"/> 
+                    <field name="ec_ean13"/>
+                    <field name="ec_brand"/> 
+                    <field name="ec_outer_code"/>					
+                    <field name="ec_qty"/> 
+                    <field name="ec_product_name"/>
+                    <field name="erp_stock"/> 						
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ecshop_product_tmalljd_form">
+            <field name="name">TMall JD Products form</field>
+            <field name="model">product.tmalljd</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="TMall JD Products">
+				<div>
+					<group>
+						<group>
+							<field name="erp_product_id"/>				
+							<field name="erp_ean13"/>							
+							<field name="ec_shop_id"/>
+							<field name="ec_num_iid"/> 
+							<field name="ec_sku_id"/>
+							<field name="ec_title"/> 
+							<field name="ec_price"/>
+						</group>
+						<group>
+							<field name="ec_color"/> 
+							<field name="ec_ean13"/>
+							<field name="ec_brand"/> 
+							<field name="ec_outer_code"/>					
+							<field name="ec_qty"/> 
+							<field name="ec_product_name"/>
+							<field name="erp_stock"/> 
+						</group>
+					</group>
+				</div>
+					<notebook>
+						<page string="套装内容">
+							<field name="erp_product_set"/>
+						</page>
+						<page string="赠品内容">
+							<field name="gift_ids" context="{'default_tmalljd_id': id}">
+								<tree editable="bottom">
+									<field name="tmalljd_id" invisible="1"/>
+									<field name="product_id"/>
+									<field name="price"/>
+									<field name="qty"/>
+								</tree>
+							</field>
+						</page>						
+					</notebook>
+                </form>
+            </field>
+        </record>		
+		
+		
+        <record model="ir.ui.view" id="loewie_ecshop_gifts_tree">
+            <field name="name">Product Tmalljd Gifts</field>
+            <field name="model">product.tmalljd.gifts</field>
+            <field name="type">tree</field>			
+            <field name="arch" type="xml">
+                <tree string="电商平台赠品">
+                    <field name="tmalljd_id"/>
+                    <field name="product_id"/>
+                    <field name="price"/>
+                    <field name="qty"/> 				
+                </tree>
+            </field>
+        </record>			
+		
+        <record id="action_ecshop_product_tmalljd" model="ir.actions.act_window">
+            <field name="name">action prodct tmalljd</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.tmalljd</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="ecshop_product_tmalljd_tree"/>
+        </record>
+        <menuitem id="menu_loewie_web_shop" name="TMall JD" parent="base.menu_base_partner" sequence="4"/>			
+        <menuitem action="action_ecshop_product_tmalljd" id="menu_ecshop_product_tmalljd" parent="menu_loewie_web_shop" sequence="6" name="All EC Products" />
+
+        <record model="ir.ui.view" id="loewie_ecshop_tree">
+            <field name="name">Loewie Ecshops</field>
+            <field name="model">loewieec.shop</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Loewie Ecshops">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="platform"/>
+                    <field name="location_id"/> 
+                    <field name="journal_id"/>				
+                </tree>
+            </field>
+        </record>
+		
+        <record model="ir.ui.view" id="loewie_ecshop_form">
+            <field name="name">Loewie Ecshops</field>
+            <field name="model">loewieec.shop</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Loewie Ecshops">
+                    <header>
+						<button name="search_product" string="导入天猫产品" type="object" attrs="{'invisible': [('code', '=', 'JDI')]}"/>
+						<button name="search_jd_wares" string="导入京东产品" type="object" attrs="{'invisible': [('code', '!=', 'JDI')]}"/>			
+						<button name="search_product_sku" string="Sync Product SKU" type="object" groups="base.group_erp_manager"/>
+						<button name="get_jd_access_token" string="京东获取授权码" type="object" groups="base.group_erp_manager" attrs="{'invisible': [('code', '!=', 'JDI')]}"/>							
+						<button name="import_orders_from_excel" string="京东天猫：从原Excel附件导入销售订单" type="object" groups="base.group_user"/>	
+						<button name="import_orders_from_jd" string="京东1：导入后台(待)发货订单" type="object" groups="base.group_user" attrs="{'invisible': [('code', '!=', 'JDI')]}" context="{'end_time':end_modified,'start_time':start_modified}"/>						
+						<button name="search_orders_by_modified_time" string="Sync Orders By Modified Time" type="object" groups="base.group_erp_manager"/>
+						<button name="search_orders_by_created_time" string="天猫1：导入后台(待)发货订单" type="object" groups="base.group_user" attrs="{'invisible': [('code', '!=', 'TMI')]}" context="{'end_time':end_modified,'start_time':start_modified}"/>	
+						<button name="search_orders_sent_on_tmall" string="(或)天猫1：导入后台(已+待)发货订单" type="object" groups="base.group_user" attrs="{'invisible': [('code', '!=', 'TMI')]}" context="{'end_time':end_modified,'start_time':start_modified}"/>							
+						<button name="import_coe_no" string="天猫or京东 2：从附件导入COE信息" type="object" groups="base.group_user"/>	
+						<button name="view_sz_sales_order" string="查看生成的深圳ERP代发订单" type="object" groups="base.group_user"/>							
+						<button name="search_orders_by_tid" string="Sync Orders By TID" type="object" groups="base.group_erp_manager"/>
+						
+						<button name="get_tmall_time" string="Get TMall Time" type="object" groups="base.group_erp_manager"/>
+						<button name="update_waybill_no_tmall" string="上传运单号与发货" type="object" groups="base.group_user"/>	
+						<button name="search_orders_by_tids" string="下载指定天猫单" type="object" groups="base.group_user" attrs="{'invisible': [('code', '=', 'JDI')]}"/>
+						<button name="search_jdi_orders_by_tids" string="下载指定京东单" type="object" groups="base.group_user" attrs="{'invisible': [('code', '!=', 'JDI')]}"/>	
+					</header>
+					<group>
+						<group>					
+							<field name="name"/>
+							<field name="active"/>							
+							<field name="code" groups="base.group_erp_manager"/>
+							<field name="platform" groups="base.group_erp_manager"/>
+							<field name="location_id" groups="base.group_erp_manager"/> 
+							<field name="warehouse_id" groups="base.group_erp_manager"/>							
+							<field name="journal_id" groups="base.group_erp_manager"/>	
+                            <field name="tmi_state"/>	
+							<field name="gift_product_id"/>	
+							<field name="gift_qty"/>								
+							<field name="partner_id"/>
+							<field name="pricelist_id"/>							
+                            <field name="sz_sale_order"/>
+							<field name="import_salesorder" domain="[('shop_id','=',id)]"/>								
+							<field name="tmall_time" groups="base.group_erp_manager"/>							
+						</group>
+						<group>					
+							<field name="appkey" groups="base.group_erp_manager"/>
+							<field name="appsecret" groups="base.group_erp_manager"/>
+							<field name="sessionkey" groups="base.group_erp_manager"/>
+							<field name="apiurl" groups="base.group_erp_manager"/> 
+							<field name="authurl" groups="base.group_erp_manager"/>		
+							<field name="tokenurl" groups="base.group_erp_manager"/>
+							<field name="access_token" groups="base.group_erp_manager"/>
+							<field name="refresh_token" groups="base.group_erp_manager"/>
+                            <field name="sync_interval"/>							
+							<field name="start_modified"/>
+							<field name="end_modified"/>	
+							<field name="last_log"/>							
+								
+						</group>
+					</group>
+					<notebook>
+
+						<page string="Sale Orders">
+							<field name="orders" nolabel="1">							
+								<tree string="Sale orders">                                
+									<field name="name" string="Order Number"/>
+									<field name="buyer_nick"/>					
+									<field name="shop_id"/>
+									<field name="selected"/>					
+									<field name="partner_id"/>
+									<field name="country_id"/>
+									<field name="client_order_ref"/>
+									<field name="user_id"/>
+									<field name="amount_total" sum="Total Tax Included"/>
+									<field name="date_confirm"/>
+									<field name="undelivered"/>	
+                                    <field name="state" invisible="1"/>	 									
+								</tree>
+							</field>
+						</page>						
+
+						<page string="Products">
+							<field name="products" nolabel="1">							
+								<tree string="Products" editable="bottom" >                                
+									<field name="erp_product_id"/>
+									<field name="erp_ean13"/>									
+									<field name="ec_shop_id"/>
+									<field name="ec_num_iid"/> 
+									<field name="ec_sku_id"/>
+									<field name="ec_title"/> 
+									<field name="ec_price"/>
+									<field name="ec_color"/> 
+									<field name="ec_ean13"/>
+									<field name="ec_brand"/> 	
+									<field name="ec_outer_code"/>									
+									<field name="ec_qty"/> 
+									<field name="ec_product_name"/>
+									<field name="erp_stock"/> 									
+								</tree>
+							</field>
+						</page>
+						
+                    </notebook>						
+                </form>
+            </field>
+        </record>		
+		
+        <record model="ir.ui.view" id="ecshop_order_tree">
+            <field name="name">TMall JD Orders</field>
+            <field name="model">sale.order</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+				<tree string="Loewie TMall JD Orders" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');blue:state in('progress');red:state  in ('invoice_except','shipping_except')">
+                    <field name="message_unread" invisible="1"/>				
+                    <field name="name" string="Order Number"/>
+                    <field name="buyer_nick"/>					
+                    <field name="shop_id"/>
+					<field name="tid"/>					
+                    <field name="partner_id"/>
+					<field name="country_id"/>
+                    <field name="client_order_ref"/>
+                    <field name="user_id"/>
+                    <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="date_confirm"/>
+                    <field name="state"/>
+					<field name="undelivered"/>
+                    <field name="date_order"/>					
+                </tree>				
+            </field>
+        </record>		
+		
+        <record id="action_loewie_ecshop" model="ir.actions.act_window">
+            <field name="name">EC Shops</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">loewieec.shop</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="loewie_ecshop_tree"/>	
+        </record>			
+        <menuitem action="action_loewie_ecshop" id="menu_loewie_ecshop" parent="menu_loewie_web_shop" sequence="6" name="Shops" />	
+
+        <record id="action_ecshop_orders" model="ir.actions.act_window">
+            <field name="name">TMall JD orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('shop_id','!=',False)]</field>			
+            <field name="view_id" ref="ecshop_order_tree"/>	
+        </record>			
+        <menuitem action="action_ecshop_orders" id="menu_ecshop_orders" parent="menu_loewie_web_shop" sequence="7" name="EC Orders" />		
+
+        <record id="view_coe_search" model="ir.ui.view">
+            <field name="name">sale.coe.search</field>
+            <field name="model">sale.coe</field>
+            <field name="arch" type="xml">
+                <search string="Express Info">
+                    <field name="name"/>
+                    <field name="tmi_jdi_no"/>
+                    <field name="receive_name"/>
+                    <field name="tel"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="loewieec_error_tree">
+            <field name="name">EC Errors</field>
+            <field name="model">loewieec.error</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+				<tree string="EC Errors">				
+                    <field name="shop_id"/>
+					<field name="name"/> 
+					<field name="create_date"/>					
+                </tree>				
+            </field>
+        </record>		
+		
+        <record id="action_loewieec_error" model="ir.actions.act_window">
+            <field name="name">EC Errors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">loewieec.error</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="loewieec_error_tree"/>	
+        </record>			
+        <menuitem action="action_loewieec_error" id="menu_loewieec_error" parent="menu_loewie_web_shop" sequence="6" name="Error Log" />
+		
+		
+		<record id="view_move_picking_tree_add_coe" model="ir.ui.view">
+            <field name="name">view move picking tree add_coe</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree/field[@name='product_id']" position='after'>                        
+                    <field name="coe_no"/>				
+				</xpath>							
+           </field>
+        </record>	
+		<record id="view_picking_view_express" model="ir.ui.view">
+            <field name="name">stock.picking.view_express</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@name='do_unreserve']" position='after'> 
+					<button name="view_express_data" string="查看快递信息" groups="base.group_user" type="object"/>
+					<button name="import_moves_from_excel" string="从Excel导入行" groups="base.group_user" type="object" states='draft'/>		
+					<button name="create_saleorder_from_picking" string="从pick创建quotation" groups="base.group_user" type="object"/>					
+				</xpath>
+				<field name="move_lines" position="before">
+                    <button name="create_return_lines_from_coe_no" type="object" string="COE运单退货" attrs="{'invisible':[('state','not in',['draft'])]}"/>
+                </field>				
+			</field>
+        </record>	
+        <record id="view_order_form_add_coe" model="ir.ui.view">
+            <field name="name">sale.order.add.coe</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree[@string='Sales Order Lines']/field[@name='name']" position='after'>
+					<field name="coe_no" groups="__export__.res_groups_61"/>
+					<field name="tmi_jdi_no" groups="__export__.res_groups_61"/>					
+					<field name="logistic_sent" groups="__export__.res_groups_61"/>
+					<field name="buyer_nick" groups="__export__.res_groups_61"/>
+					<field name="pay_time" groups="__export__.res_groups_61"/>
+					<field name="create_time_tmjd" groups="__export__.res_groups_61"/>					
+                    <button name="copy_sale_order_line" icon="terp-gtk-jump-to-ltr" type="object" string="Copy" attrs="{'invisible': [('state', '!=', 'draft')]}" />					
+                </xpath>
+                <xpath expr="//sheet/group/group/field[@name='currency_id']" position='after'>  
+					<button name="update_waybill_no" string="上传运单号与发货" type="object" groups="base.group_user"/>				
+					<button name="view_express_data" string="查看快递信息" type="object" groups="base.group_user"/>
+					<button name="update_orders_seller_memo" string="更新电商备注" type="object" groups="base.group_user" states="draft,progress,done"/>
+				</xpath>				
+            </field>
+        </record>		
+		
+        <record model="ir.ui.view" id="ecshop_sale_coe_tree">
+            <field name="name">TMallJD COE No</field>
+            <field name="model">sale.coe</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="TMall JD Products" editable="bottom">
+                    <field name="id"/>
+                    <field name="sale_id"/>
+                    <field name="customer"/>
+                    <field name="picking_id"/>	
+                    <field name="logistic_sent"/>						
+					
+					<field name="name"/>
+					<field name="tmi_jdi_no"/>					
+                    <field name="receive_name"/>
+                    <field name="tel"/> 
+                    <field name="telephone"/> 					
+                    <field name="province"/>
+                    <field name="city"/> 
+                    <field name="county"/> 					
+                    <field name="address"/>
+                    <field name="zip"/> 
+					
+                    <field name="qty"/>
+                    <field name="price"/> 
+                    <field name="weight"/>
+                    <field name="class_desc"/> 					
+					
+                    <field name="state"/>					
+                </tree>
+            </field>
+        </record>
+        <record id="action_loewieec_salecoe" model="ir.actions.act_window">
+            <field name="name">EC Coe Informaion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.coe</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="ecshop_sale_coe_tree"/>	
+        </record>		
+        <menuitem action="action_loewieec_salecoe" id="menu_loewieec_sale_coe" parent="menu_loewie_web_shop" sequence="7" name="COE NO" />		
+		
+        <record id="view_sales_bymonth_filter" model="ir.ui.view">
+            <field name="name">sale.order.bymonth.filter</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="tmi_jdi_nos"/>
+					<field name="express_ids"/>
+                </xpath> 
+            </field>
+        </record>				
+		
+    </data>
+</openerp>	

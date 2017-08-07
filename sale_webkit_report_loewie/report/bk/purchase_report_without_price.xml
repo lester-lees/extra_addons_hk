@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+        <data>
+<template id="report_po_without_price_document">
+    <t t-call="report.external_layout">
+        <div class="page">
+            <table class="dest_address" width="100%">
+                <tr>
+                    <td width="25%">
+					<strong>Loewie Shipping address:</strong>
+                    </td>
+					<td>
+					<p>4/F, Unit C, Mai On Industrial Building, 17-21 Kung Yip Street, Kwai Chung, NT, Hong Kong</p>
+					</td>
+                </tr>
+				<tr>
+				     <td width="15%"><strong>Supplier:</strong></td><td><span t-field="o.partner_id.name"/></td>
+				</tr>
+				<tr t-if="o.partner_id.street">
+                     <td width="15%">Address:</td><td><span t-field="o.partner_id.street"/></td>
+				</tr>
+				<tr t-if="o.partner_id.city">
+					 <td width="15%">City: </td><td><span t-field="o.partner_id.city"/></td>
+				</tr><tr t-if="o.partner_id.country_id">	 
+					 <td width="15%">Country: </td><td><span t-field="o.partner_id.country_id"/></td>
+				</tr><tr t-if="o.partner_id.phone">	 
+					 <td width="15%">Phone: </td><td><span t-field="o.partner_id.phone"/></td>
+				</tr><tr t-if="o.partner_id.fax">	 
+					 <td width="15%">Fax: </td><td><span t-field="o.partner_id.fax"/></td>
+				</tr><tr t-if="o.partner_id.email">	 
+					 <td width="15%">Email: </td><td><span t-field="o.partner_id.email"/></td>
+				</tr>
+            </table>
+
+                <h2>
+                    <span t-if="o.state not in ['draft','sent']">Purchase Order N° </span>
+                    <span t-if="o.state in ['draft','sent']">Purchase Request N° </span>
+                    <span t-field="o.name"/>
+                </h2>
+
+                    <div class="row mt32 mb32" id="informations">
+                        <div t-if="o.date_order" class="col-xs-6">
+                            <strong>Order Date: </strong> <span t-field="o.date_order"/>
+                        </div>
+                        <div t-if="o.partner_ref" class="col-xs-6">
+                            <strong>Reference:</strong> <p t-field="o.partner_ref"/>
+                        </div>
+                    </div>
+
+				<t t-set="qty_total" t-value="0"/>
+                <t t-foreach="get_pur_lines_groups(o.order_line, o.pricelist_id.currency_id).items()" t-as="group">              
+                    <table class="table-condensed" width="100%">
+                        <thead>
+                            <tr>
+                                <th width="10%">ID</th>
+                                <th width="40%">Product Name</th>
+                                <th width="40%">Code</th>
+                                <th  width="10%" class="text-right">Qty. </th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+							<t t-set="qty_subtotal" t-value="0"/>
+							<t t-set="line_id" t-value="1"/>
+                            <t t-foreach="group[1]['group_lines']" t-as="line">
+                                <tr>
+                                    <td width="10%"><t t-esc="line_id"/></td>
+									<t t-set="line_id" t-value="line_id + 1"/>
+                                    <td width="40%"><t t-esc="line.product_id.name or ' '"/></td>
+                                    <td width="40%"><t t-esc="line.product_id.default_code or ' '"/></td>
+                                    <td width="10%" class="text-right">
+                                        <t t-esc="int(line.product_qty)"/>
+                                    </td>
+                                </tr>
+								<t t-set="qty_subtotal" t-value="qty_subtotal + line.product_qty"/>
+                            </t>
+                        </tbody>      
+                    </table>					
+                    <div class="col-xs-4 pull-right">
+                        <table class="table table-condensed">
+                            <tr class="border-black">
+                                <td><strong>SubTotal Qty</strong></td>
+                                <td class="text-right">
+                                    <span t-esc="int(qty_subtotal)"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>   
+					<t t-set="qty_total" t-value="qty_total + qty_subtotal"/>
+                </t>
+                <div style="clear:both;"/>
+    <!-- order total -->
+
+                <br class="col-xs-12 border-black"/>
+                <div class="col-xs-4 pull-right">
+                    <table class="table table-condensed">
+                        <tr class="border-black">
+                            <td><strong>Total Qty</strong></td>
+                            <td class="text-right"><span t-esc="int(qty_total)"/></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="clear:both;"/>
+				<p t-if="o.notes"><strong>Note:</strong><br/><span t-field="o.notes"/></p>
+        </div>
+        <div class="oe_structure"/>
+    </t>
+
+</template>
+
+<template id="po_without_price">
+    <t t-call="report.html_container">
+        <t t-foreach="doc_ids" t-as="doc_id">
+            <t t-raw="translate_doc(doc_id, doc_model, 'partner_id.lang', 'sale_webkit_report_loewie.report_po_without_price_document')"/>
+        </t>
+    </t>
+</template>
+        <report 
+            id="report_po_loewie_act"
+            string="Purchase Order NO Price"
+            model="purchase.order" 
+            report_type="qweb-pdf"
+            file="sale_webkit_report_loewie.po_without_price" 
+            name="sale_webkit_report_loewie.po_without_price"         
+        />
+    </data>
+</openerp>

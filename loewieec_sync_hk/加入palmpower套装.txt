@@ -1,0 +1,19 @@
+				
+			
+                #加入套装PowerBullet - Palmpower - Fuchsia/Grey, PowerBullet - Palmbody - Fuchsia, PowerBullet - Palmsensual - Fuchsia
+                if product_tmalljd_obj.erp_product_id.name_template == 'PowerBullet - Palmpower - Fuchsia/Grey':
+                    product_obj = self.pool.get('product.product')			
+                    Palmbody_id = product_obj.search(cr,uid,[('name_template','=ilike','PowerBullet - Palmbody - Fuchsia')],context=context)
+                    Palmsensual_id = product_obj.search(cr,uid,[('name_template','=ilike','PowerBullet - Palmsensual - Fuchsia')],context=context)	
+                    #if not Palmbody_id or not Palmsensual_id : continue	
+                   	#Palmbody_id = Palmbody_id[0]
+                   	Palmsensual_id = Palmsensual_id[0]	
+				
+                    palmpower_val = line_vals.copy()
+                    Palmsensual_val = line_vals.copy()	
+		    		
+                   	palmpower_val.update({'product_id':Palmbody_id, 'price_unit':0, 'product_uos_qty':1, 'product_uom_qty':1})				
+                   	Palmsensual_val.update({'product_id':Palmsensual_id, 'price_unit':0, 'product_uos_qty':1, 'product_uom_qty':1})  
+				
+                    order_val['order_line'].append( (0, 0, palmpower_val) )
+                    order_val['order_line'].append( (0, 0, Palmsensual_val) )	
