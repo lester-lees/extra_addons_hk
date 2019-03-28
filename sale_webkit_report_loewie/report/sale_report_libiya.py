@@ -293,7 +293,8 @@ class sale_report_libiya(report_sxw.rml_parse):
         for line in order_line:
             product_qty = line.product_uom_qty	
 				
-            type = line.product_id.product_type		
+            type = line.product_id.product_type or ''
+            type = type.strip()
             if line.name and line.name.lower().find('sample')>=0:
                 type = 'Sample'			
 
@@ -395,7 +396,8 @@ class sale_report_libiya(report_sxw.rml_parse):
             return res_brand		
 
         for line in move_lines:				
-            type = line.product_id.product_type		
+            type = line.product_id.product_type or ''
+            type = type.strip()
             if line.name and line.name.lower().find('sample')>=0:
                 type = 'Sample'			
 
@@ -512,7 +514,8 @@ class sale_report_libiya(report_sxw.rml_parse):
                 else:
                     continue
 					
-            type = line.product_id.product_type		
+            type = line.product_id.product_type or ''
+            type = type.strip()
             if line.name and line.name.lower().find('sample')>=0:
                 type = 'Sample'			
 
