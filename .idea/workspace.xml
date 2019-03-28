@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="abeafbd3-14cb-4ea1-8241-1016d8f50989" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/sale_webkit_report_loewie/report/sale_report_libiya.py" beforeDir="false" afterPath="$PROJECT_DIR$/sale_webkit_report_loewie/report/sale_report_libiya.py" afterDir="false" />
-    </list>
+    <list default="true" id="abeafbd3-14cb-4ea1-8241-1016d8f50989" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,11 +45,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sale_report_libiya.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="sale_report_libiya.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sale_webkit_report_loewie/report/sale_report_libiya.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-90">
-              <caret line="274" column="35" selection-start-line="274" selection-start-column="8" selection-end-line="274" selection-end-column="35" />
+            <state relative-caret-position="710">
+              <caret line="314" column="14" lean-forward="true" selection-start-line="314" selection-start-column="14" selection-end-line="314" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sale_report_libiya_orginal.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/sale_webkit_report_loewie/report/sale_report_libiya_orginal.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="670">
+              <caret line="315" column="52" lean-forward="true" selection-start-line="315" selection-start-column="52" selection-end-line="315" selection-end-column="52" />
             </state>
           </provider>
         </entry>
@@ -114,7 +121,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1" />
     <option name="y" value="1" />
     <option name="width" value="1942" />
@@ -316,8 +323,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/sale_webkit_report_loewie/report/sale_report_libiya.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-90">
-          <caret line="274" column="35" selection-start-line="274" selection-start-column="8" selection-end-line="274" selection-end-column="35" />
+        <state relative-caret-position="710">
+          <caret line="314" column="14" lean-forward="true" selection-start-line="314" selection-start-column="14" selection-end-line="314" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sale_webkit_report_loewie/report/sale_report_libiya_orginal.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="670">
+          <caret line="315" column="52" lean-forward="true" selection-start-line="315" selection-start-column="52" selection-end-line="315" selection-end-column="52" />
         </state>
       </provider>
     </entry>
